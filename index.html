@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Read & Rhyme Buddy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <header class="hero">
+    <img class="hero-art" src="assets/images/reading-buddy-hero.png" alt="A preschool girl reading with a friendly alphabet buddy">
+    <div class="hero-overlay">
+      <p class="eyebrow">English Reading Quest</p>
+      <h1>Read & Rhyme Buddy</h1>
+      <p>Play through phonics sounds, blend cards, sight words, tiny stories, and listening games made for a preschool reader.</p>
+      <div class="hero-actions">
+        <button id="start-quest" class="primary-button" type="button">Start Quest</button>
+        <button id="hear-welcome" class="icon-button" type="button" aria-label="Hear welcome message" title="Hear welcome">▶</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="sidebar" aria-label="Learning controls">
+      <section class="profile-panel">
+        <div class="avatar" aria-hidden="true">Aa</div>
+        <div>
+          <span>Reader</span>
+          <strong>Little Sister</strong>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Progress">
+        <div>
+          <strong id="xp-count">0</strong>
+          <span>XP</span>
+        </div>
+        <div>
+          <strong id="stars-count">0</strong>
+          <span>Stars</span>
+        </div>
+        <div>
+          <strong id="mastered-count">0</strong>
+          <span>Known</span>
+        </div>
+      </section>
+
+      <label class="field-label" for="category-select">Sound shelf</label>
+      <select id="category-select"></select>
+
+      <label class="field-label" for="search-input">Find a sound or word</label>
+      <input id="search-input" type="search" placeholder="sh, cake, the">
+
+      <nav class="tabs" aria-label="App sections">
+        <button class="tab active" type="button" data-tab="learn">Sound Cards</button>
+        <button class="tab" type="button" data-tab="quest">Word Quest</button>
+        <button class="tab" type="button" data-tab="sight">Sight Words</button>
+        <button class="tab" type="button" data-tab="story">Story Maker</button>
+        <button class="tab" type="button" data-tab="grownup">Grown-up View</button>
+      </nav>
+    </aside>
+
+    <section class="content">
+      <section class="daily-band">
+        <div>
+          <p class="eyebrow">Today’s Path</p>
+          <h2>Listen, blend, read, sparkle.</h2>
+        </div>
+        <div class="quest-pills">
+          <span id="daily-sounds">0/6 sounds</span>
+          <span id="daily-words">0/5 words</span>
+          <span id="daily-sight">0/5 sight</span>
+        </div>
+        <button id="claim-prize" class="secondary-button" type="button">Claim Star</button>
+      </section>
+
+      <section id="learn-panel" class="panel active">
+        <div class="section-title">
+          <div>
+            <h2>Sound Cards</h2>
+            <p id="learn-summary">Tap a card to hear it, trace it, and read example words.</p>
+          </div>
+          <button id="shuffle-cards" class="secondary-button" type="button">Shuffle</button>
+        </div>
+        <div id="phonics-grid" class="phonics-grid"></div>
+      </section>
+
+      <section id="quest-panel" class="panel">
+        <div class="section-title">
+          <div>
+            <h2>Word Quest</h2>
+            <p>Choose the word that uses the sound.</p>
+          </div>
+          <button id="new-question" class="secondary-button" type="button">New</button>
+        </div>
+        <article class="quiz-card">
+          <div id="quiz-picture" class="quiz-picture" aria-hidden="true">🌈</div>
+          <p class="prompt-label">Find this sound</p>
+          <h3 id="quiz-sound">sh</h3>
+          <div id="quiz-options" class="option-grid"></div>
+          <p id="quiz-feedback" class="feedback"></p>
+        </article>
+      </section>
+
+      <section id="sight-panel" class="panel">
+        <div class="section-title">
+          <div>
+            <h2>Sight Words</h2>
+            <p>High-frequency words for fast, confident reading.</p>
+          </div>
+          <button id="read-sight-list" class="secondary-button" type="button">Read List</button>
+        </div>
+        <div id="sight-grid" class="sight-grid"></div>
+      </section>
+
+      <section id="story-panel" class="panel">
+        <div class="section-title">
+          <div>
+            <h2>Story Maker</h2>
+            <p>Build a tiny decodable story from today’s sounds.</p>
+          </div>
+          <button id="make-story" class="secondary-button" type="button">New Story</button>
+        </div>
+        <article class="story-card">
+          <div class="story-scene" aria-hidden="true">
+            <span>📚</span><span>⭐</span><span>🧁</span>
+          </div>
+          <p id="story-text"></p>
+          <div class="story-actions">
+            <button id="read-story" class="primary-button" type="button">Read Aloud</button>
+            <button id="mark-story" class="secondary-button" type="button">I Read It</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="grownup-panel" class="panel">
+        <div class="section-title">
+          <div>
+            <h2>Grown-up View</h2>
+            <p>Scope, coverage, and shipping notes.</p>
+          </div>
+        </div>
+        <div class="grownup-grid">
+          <article>
+            <strong>Phonics Coverage</strong>
+            <p>Alphabet sounds, consonant blends, digraphs, trigraphs, short vowels, long vowels, vowel teams, r-controlled vowels, diphthongs, endings, and soft/hard letter patterns.</p>
+          </article>
+          <article>
+            <strong>Reading Routine</strong>
+            <p>Hear the sound, say the example words, answer the quest, read sight words, then finish with a tiny story.</p>
+          </article>
+          <article>
+            <strong>Audio</strong>
+            <p>Uses the browser’s built-in speech voice, so the app stays lightweight and does not need large audio files.</p>
+          </article>
+          <article>
+            <strong>Ship Later</strong>
+            <p>Static files are ready for GitHub Pages, Vercel, Netlify, or Cloudflare Pages.</p>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
