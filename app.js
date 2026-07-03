@@ -12,6 +12,9 @@ const state = {
   vocabPlaying: true,
   vocabTimer: null,
   vocabInterval: 5000,
+  storyIndex: 0,
+  storyFilter: "all",
+  storyAutoPlay: false,
   query: "",
   quiz: null,
   dictation: {
@@ -147,14 +150,7 @@ const sightWords = [
   "find", "long", "down", "day", "did", "get", "come", "made", "may", "part"
 ];
 
-const storyBank = [
-  "I see a small cat. The cat can sit in the sun.",
-  "We can play by the big tree. I see a bee and a green leaf.",
-  "The ship is on the blue sea. The fish can swim and splash.",
-  "A frog jumps from the grass. It is fun to hop and clap.",
-  "The child has a red kite. The kite can fly up, up, up.",
-  "Mom said, \"Look at the bright star.\" We smile at the night sky."
-];
+const phonicsStories = window.PHONICS_STORIES || [];
 
 const highFrequencyWords = [...new Set((window.HIGH_FREQUENCY_WORDS || sightWords).map((word) => word.trim()).filter(Boolean))];
 const REVIEW_INTERVALS = [1, 2, 4, 7, 15, 30];
@@ -361,6 +357,13 @@ const els = {
   dictationFeedback: document.querySelector("#dictation-feedback"),
   dictationResults: document.querySelector("#dictation-results"),
   wrongbookList: document.querySelector("#wrongbook-list"),
+  storyScene: document.querySelector("#story-scene"),
+  storySoundLabel: document.querySelector("#story-sound-label"),
+  storyCount: document.querySelector("#story-count"),
+  storyTitle: document.querySelector("#story-title"),
+  storySelect: document.querySelector("#story-select"),
+  storySoundFilter: document.querySelector("#story-sound-filter"),
+  toggleStoryAutoplay: document.querySelector("#toggle-story-autoplay"),
   storyText: document.querySelector("#story-text"),
   dailySounds: document.querySelector("#daily-sounds"),
   dailyWords: document.querySelector("#daily-words"),
@@ -751,13 +754,87 @@ function finishDictation() {
   addXp(score >= 80 ? 20 : 8);
 }
 
-function makeStory() {
-  const story = storyBank[Math.floor(Math.random() * storyBank.length)];
-  els.storyText.textContent = story;
+function setupStoryFilters() {
+  const sounds = ["all", ...new Set(phonicsStories.map((story) => story.sound))];
+  els.storySoundFilter.innerHTML = sounds.map((sound) => {
+    const label = sound === "all" ? "All stories" : titleCase(sound);
+    return `<option value="${sound}">${label}</option>`;
+  }).join("");
+  renderStoryOptions();
+}
+
+function filteredStories() {
+  return phonicsStories.filter((story) => state.storyFilter === "all" || story.sound === state.storyFilter);
+}
+
+function renderStoryOptions() {
+  const stories = filteredStories();
+  state.storyIndex = clampIndex(state.storyIndex, stories.length || 1);
+  els.storySelect.innerHTML = stories.map((story, index) => `
+    <option value="${index}">${index + 1}. ${story.title}</option>
+  `).join("");
+  els.storySelect.value = String(state.storyIndex);
+  renderStory();
+}
+
+function currentStory() {
+  const stories = filteredStories();
+  return stories[clampIndex(state.storyIndex, stories.length)];
+}
+
+function renderStory() {
+  const stories = filteredStories();
+  if (!stories.length) {
+    els.storyTitle.textContent = "No story found";
+    els.storyText.textContent = "Choose another phonics sound.";
+    els.storyCount.textContent = "0 stories";
+    els.storyScene.innerHTML = `<span>🔎</span><small>no story</small>`;
+    return;
+  }
+  state.storyIndex = clampIndex(state.storyIndex, stories.length);
+  const story = stories[state.storyIndex];
+  els.storySelect.value = String(state.storyIndex);
+  els.storyTitle.textContent = story.title;
+  els.storyText.textContent = story.text;
+  els.storyCount.textContent = `Story ${state.storyIndex + 1} of ${stories.length}`;
+  els.storySoundLabel.textContent = story.sound;
+  els.storyScene.innerHTML = `<span>${story.emoji}</span><small id="story-sound-label">${story.sound}</small>`;
+  els.toggleStoryAutoplay.textContent = state.storyAutoPlay ? "Stop Auto" : "Auto Play";
+}
+
+function playCurrentStory() {
+  const story = currentStory();
+  if (!story) return;
+  if (!("speechSynthesis" in window)) {
+    showToast("Audio is not available in this browser.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(`${story.title}. ${story.text}`);
+  utterance.lang = "en-US";
+  utterance.rate = 0.76;
+  utterance.pitch = 1.12;
+  utterance.onend = () => {
+    state.dailyWords += 1;
+    renderStats();
+    if (state.storyAutoPlay) {
+      moveStory(1);
+      window.setTimeout(playCurrentStory, 700);
+    }
+  };
+  speechSynthesis.speak(utterance);
+}
+
+function moveStory(direction) {
+  const stories = filteredStories();
+  if (!stories.length) return;
+  state.storyIndex = clampIndex(state.storyIndex + direction, stories.length);
+  renderStory();
 }
 
 function setTab(tabName) {
   if (tabName !== "vocab") stopVocabAlbum();
+  if (tabName !== "story") state.storyAutoPlay = false;
   document.querySelectorAll(".tab").forEach((button) => {
     button.classList.toggle("active", button.dataset.tab === tabName);
   });
@@ -766,6 +843,7 @@ function setTab(tabName) {
   });
   if (tabName === "vocab") renderVocabWords();
   if (tabName === "wrongbook") renderWrongBook();
+  if (tabName === "story") renderStory();
 }
 
 document.addEventListener("click", (event) => {
@@ -881,10 +959,33 @@ els.dictationAnswer.addEventListener("keydown", (event) => {
 
 document.querySelector("#refresh-wrongbook").addEventListener("click", renderWrongBook);
 
-document.querySelector("#make-story").addEventListener("click", makeStory);
+document.querySelector("#previous-story").addEventListener("click", () => moveStory(-1));
+document.querySelector("#next-story").addEventListener("click", () => moveStory(1));
 
 document.querySelector("#read-story").addEventListener("click", () => {
-  speak(els.storyText.textContent, 0.78);
+  state.storyAutoPlay = false;
+  renderStory();
+  playCurrentStory();
+});
+
+document.querySelector("#toggle-story-autoplay").addEventListener("click", () => {
+  state.storyAutoPlay = !state.storyAutoPlay;
+  renderStory();
+  if (state.storyAutoPlay) playCurrentStory();
+  else if ("speechSynthesis" in window) speechSynthesis.cancel();
+});
+
+els.storySelect.addEventListener("change", (event) => {
+  state.storyIndex = Number(event.target.value);
+  state.storyAutoPlay = false;
+  renderStory();
+});
+
+els.storySoundFilter.addEventListener("change", (event) => {
+  state.storyFilter = event.target.value;
+  state.storyIndex = 0;
+  state.storyAutoPlay = false;
+  renderStoryOptions();
 });
 
 document.querySelector("#mark-story").addEventListener("click", () => {
@@ -920,10 +1021,11 @@ els.vocabLengthFilter.addEventListener("change", (event) => {
 
 setupCategories();
 setupVocabFilters();
+setupStoryFilters();
 renderStats();
 renderCards();
 renderSightWords();
 renderVocabWords();
 renderWrongBook();
 newQuiz();
-makeStory();
+renderStory();

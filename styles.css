@@ -753,7 +753,7 @@ input {
   display: grid;
   gap: 16px;
   margin: 0 auto;
-  max-width: 860px;
+  max-width: 940px;
   padding: 24px;
 }
 
@@ -763,18 +763,39 @@ input {
   border: 3px solid var(--line);
   border-radius: 20px;
   display: flex;
-  font-size: 64px;
+  flex-direction: column;
+  font-size: 84px;
   gap: 22px;
   justify-content: center;
   min-height: 150px;
 }
 
+.story-scene small {
+  background: #ffffff;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 900;
+  padding: 6px 12px;
+  text-transform: uppercase;
+}
+
+#story-title {
+  font-size: clamp(40px, 6vw, 68px);
+  margin-bottom: 0;
+}
+
 #story-text {
   font-family: "Baloo 2", sans-serif;
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(26px, 4vw, 42px);
   font-weight: 700;
-  line-height: 1.12;
+  line-height: 1.2;
   margin-bottom: 0;
+}
+
+.story-actions {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .grownup-grid {
@@ -834,7 +855,8 @@ input {
   }
 
   .album-stage,
-  .album-controls {
+  .album-controls,
+  .story-actions {
     grid-template-columns: 1fr;
   }
 

@@ -63,7 +63,7 @@
         <button class="tab" type="button" data-tab="vocab">1000 Words</button>
         <button class="tab" type="button" data-tab="dictation">Dictation</button>
         <button class="tab" type="button" data-tab="wrongbook">Wrong Book</button>
-        <button class="tab" type="button" data-tab="story">Story Maker</button>
+        <button class="tab" type="button" data-tab="story">Story Theatre</button>
         <button class="tab" type="button" data-tab="grownup">Grown-up View</button>
       </nav>
     </aside>
@@ -205,18 +205,27 @@
       <section id="story-panel" class="panel">
         <div class="section-title">
           <div>
-            <h2>Story Maker</h2>
-            <p>Build a tiny decodable story from today’s sounds.</p>
+            <h2>Phonics Story Theatre</h2>
+            <p>Choose from 100 funny original phonics stories, then let the app read aloud.</p>
           </div>
-          <button id="make-story" class="secondary-button" type="button">New Story</button>
+          <div class="toolbar">
+            <select id="story-sound-filter" aria-label="Filter stories by phonics sound"></select>
+            <select id="story-select" aria-label="Choose a phonics story"></select>
+          </div>
         </div>
         <article class="story-card">
-          <div class="story-scene" aria-hidden="true">
-            <span>📚</span><span>⭐</span><span>🧁</span>
+          <div id="story-scene" class="story-scene" aria-hidden="true">
+            <span>📚</span>
+            <small id="story-sound-label">short a</small>
           </div>
+          <p id="story-count" class="prompt-label">Story 1 of 100</p>
+          <h3 id="story-title">Story Title</h3>
           <p id="story-text"></p>
           <div class="story-actions">
-            <button id="read-story" class="primary-button" type="button">Read Aloud</button>
+            <button id="previous-story" class="secondary-button" type="button">Previous</button>
+            <button id="read-story" class="primary-button" type="button">Play Story</button>
+            <button id="toggle-story-autoplay" class="secondary-button" type="button">Auto Play</button>
+            <button id="next-story" class="secondary-button" type="button">Next</button>
             <button id="mark-story" class="secondary-button" type="button">I Read It</button>
           </div>
         </article>
@@ -252,6 +261,7 @@
   </main>
 
   <script src="high-frequency-words.js"></script>
+  <script src="phonics-stories.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
