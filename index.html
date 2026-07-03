@@ -60,6 +60,9 @@
         <button class="tab active" type="button" data-tab="learn">Sound Cards</button>
         <button class="tab" type="button" data-tab="quest">Word Quest</button>
         <button class="tab" type="button" data-tab="sight">Sight Words</button>
+        <button class="tab" type="button" data-tab="vocab">1000 Words</button>
+        <button class="tab" type="button" data-tab="dictation">Dictation</button>
+        <button class="tab" type="button" data-tab="wrongbook">Wrong Book</button>
         <button class="tab" type="button" data-tab="story">Story Maker</button>
         <button class="tab" type="button" data-tab="grownup">Grown-up View</button>
       </nav>
@@ -75,6 +78,7 @@
           <span id="daily-sounds">0/6 sounds</span>
           <span id="daily-words">0/5 words</span>
           <span id="daily-sight">0/5 sight</span>
+          <span id="review-due">0 due</span>
         </div>
         <button id="claim-prize" class="secondary-button" type="button">Claim Star</button>
       </section>
@@ -118,6 +122,86 @@
         <div id="sight-grid" class="sight-grid"></div>
       </section>
 
+      <section id="vocab-panel" class="panel">
+        <div class="section-title">
+          <div>
+            <h2>1000 High-Frequency Words</h2>
+            <p id="vocab-summary">A gentle auto-play picture album for learning one word at a time.</p>
+          </div>
+          <div class="toolbar">
+            <select id="vocab-length-filter" aria-label="Filter words by length"></select>
+            <select id="vocab-speed" aria-label="Choose album speed">
+              <option value="3000">3 sec</option>
+              <option value="5000" selected>5 sec</option>
+              <option value="8000">8 sec</option>
+            </select>
+          </div>
+        </div>
+        <article class="vocab-album" aria-live="polite">
+          <div class="album-stage">
+            <div id="vocab-album-picture" class="word-picture album-picture" aria-hidden="true">Aa</div>
+            <div class="album-copy">
+              <p id="vocab-album-count" class="prompt-label">Word 1 of 1000</p>
+              <div class="vocab-word album-word">
+                <strong id="vocab-album-word">word</strong>
+                <span id="vocab-album-length">4 letters</span>
+              </div>
+              <p id="vocab-album-definition">Meaning will appear here.</p>
+              <p id="vocab-album-sentence">Example sentence will appear here.</p>
+            </div>
+          </div>
+          <div class="album-progress" aria-hidden="true">
+            <i id="vocab-album-progress"></i>
+          </div>
+          <div class="album-controls" aria-label="Vocabulary album controls">
+            <button id="prev-vocab-word" class="secondary-button" type="button">Previous</button>
+            <button id="toggle-vocab-play" class="primary-button" type="button">Pause</button>
+            <button id="next-vocab-word" class="secondary-button" type="button">Next</button>
+            <button id="hear-vocab-word" class="secondary-button" type="button">Hear</button>
+            <button id="learn-current-word" class="secondary-button" type="button">Learn</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="dictation-panel" class="panel">
+        <div class="section-title">
+          <div>
+            <h2>Picture Dictation</h2>
+            <p>Look at the picture clue, listen, spell the English word, then submit.</p>
+          </div>
+          <div class="toolbar">
+            <select id="dictation-size" aria-label="Choose dictation batch size">
+              <option value="10">10 words</option>
+              <option value="20">20 words</option>
+            </select>
+            <button id="start-dictation" class="primary-button" type="button">Start</button>
+          </div>
+        </div>
+        <article class="dictation-card">
+          <div id="dictation-picture" class="word-picture large-picture" aria-hidden="true">Aa</div>
+          <p id="dictation-progress" class="prompt-label">Choose 10 or 20 words to begin.</p>
+          <p id="dictation-clue" class="dictation-clue">The app will show a picture and read the word aloud.</p>
+          <div class="dictation-form">
+            <input id="dictation-answer" type="text" placeholder="Type the English word">
+            <button id="hear-dictation-word" class="secondary-button" type="button">Hear</button>
+            <button id="submit-dictation" class="primary-button" type="button">Submit</button>
+          </div>
+          <p id="dictation-feedback" class="feedback"></p>
+          <div id="dictation-results" class="dictation-results"></div>
+        </article>
+      </section>
+
+      <section id="wrongbook-panel" class="panel">
+        <div class="section-title">
+          <div>
+            <h2>Wrong Book & Review</h2>
+            <p>Wrong words come back using a spaced review schedule: 1, 2, 4, 7, 15, then 30 days.</p>
+          </div>
+          <button id="refresh-wrongbook" class="secondary-button" type="button">Refresh</button>
+        </div>
+        <div id="wrongbook-list" class="review-list"></div>
+      </section>
+
       <section id="story-panel" class="panel">
         <div class="section-title">
           <div>
@@ -152,21 +236,22 @@
           </article>
           <article>
             <strong>Reading Routine</strong>
-            <p>Hear the sound, say the example words, answer the quest, read sight words, then finish with a tiny story.</p>
+            <p>Hear the sound, learn 1000 high-frequency words through picture clues and speech, answer dictation, review mistakes, then finish with a tiny story.</p>
           </article>
           <article>
             <strong>Audio</strong>
             <p>Uses the browser’s built-in speech voice, so the app stays lightweight and does not need large audio files.</p>
           </article>
           <article>
-            <strong>Ship Later</strong>
-            <p>Static files are ready for GitHub Pages, Vercel, Netlify, or Cloudflare Pages.</p>
+            <strong>Review Science</strong>
+            <p>Missed dictation words are scheduled for later practice with expanding intervals inspired by the forgetting curve.</p>
           </article>
         </div>
       </section>
     </section>
   </main>
 
+  <script src="high-frequency-words.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
