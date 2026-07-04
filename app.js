@@ -833,6 +833,8 @@ function moveStory(direction) {
 }
 
 function setTab(tabName) {
+  const validTabs = ["home", "learn", "quest", "sight", "vocab", "dictation", "wrongbook", "story", "grownup"];
+  if (!validTabs.includes(tabName)) tabName = "home";
   if (tabName !== "vocab") stopVocabAlbum();
   if (tabName !== "story") state.storyAutoPlay = false;
   document.querySelectorAll(".tab").forEach((button) => {
@@ -841,6 +843,14 @@ function setTab(tabName) {
   document.querySelectorAll(".panel").forEach((panel) => {
     panel.classList.toggle("active", panel.id === `${tabName}-panel`);
   });
+  document.querySelector(".daily-band")?.classList.toggle("hidden", tabName === "home");
+  document.querySelectorAll(".sidebar-filter").forEach((filter) => {
+    const pages = (filter.dataset.filterFor || "").split(" ");
+    filter.hidden = !pages.includes(tabName);
+  });
+  if (window.location.hash !== `#${tabName}`) {
+    history.replaceState(null, "", `#${tabName}`);
+  }
   if (tabName === "vocab") renderVocabWords();
   if (tabName === "wrongbook") renderWrongBook();
   if (tabName === "story") renderStory();
@@ -908,9 +918,9 @@ document.addEventListener("click", (event) => {
 });
 
 document.querySelector("#start-quest").addEventListener("click", () => {
-  setTab("learn");
+  setTab("home");
   document.querySelector(".app-shell").scrollIntoView({ behavior: "smooth" });
-  speak("Let us read, rhyme, and sparkle.");
+  speak("Choose a learning room.");
 });
 
 document.querySelector("#hear-welcome").addEventListener("click", () => {
@@ -1029,3 +1039,8 @@ renderVocabWords();
 renderWrongBook();
 newQuiz();
 renderStory();
+setTab(window.location.hash.replace("#", "") || "home");
+
+window.addEventListener("hashchange", () => {
+  setTab(window.location.hash.replace("#", "") || "home");
+});

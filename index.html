@@ -50,14 +50,19 @@
         </div>
       </section>
 
-      <label class="field-label" for="category-select">Sound shelf</label>
-      <select id="category-select"></select>
+      <div class="sidebar-filter" data-filter-for="learn">
+        <label class="field-label" for="category-select">Sound shelf</label>
+        <select id="category-select"></select>
+      </div>
 
-      <label class="field-label" for="search-input">Find a sound or word</label>
-      <input id="search-input" type="search" placeholder="sh, cake, the">
+      <div class="sidebar-filter" data-filter-for="learn vocab">
+        <label class="field-label" for="search-input">Find a sound or word</label>
+        <input id="search-input" type="search" placeholder="sh, cake, the">
+      </div>
 
       <nav class="tabs" aria-label="App sections">
-        <button class="tab active" type="button" data-tab="learn">Sound Cards</button>
+        <button class="tab active" type="button" data-tab="home">Home</button>
+        <button class="tab" type="button" data-tab="learn">Sound Cards</button>
         <button class="tab" type="button" data-tab="quest">Word Quest</button>
         <button class="tab" type="button" data-tab="sight">Sight Words</button>
         <button class="tab" type="button" data-tab="vocab">1000 Words</button>
@@ -69,7 +74,7 @@
     </aside>
 
     <section class="content">
-      <section class="daily-band">
+      <section class="daily-band hidden">
         <div>
           <p class="eyebrow">Today’s Path</p>
           <h2>Listen, blend, read, sparkle.</h2>
@@ -83,7 +88,58 @@
         <button id="claim-prize" class="secondary-button" type="button">Claim Star</button>
       </section>
 
-      <section id="learn-panel" class="panel active">
+      <section id="home-panel" class="panel active">
+        <div class="section-title">
+          <div>
+            <h2>Choose a Learning Room</h2>
+            <p>Pick one feature. Each room opens on its own page so the homepage stays simple.</p>
+          </div>
+        </div>
+        <div class="feature-grid">
+          <button class="feature-card" type="button" data-tab="learn">
+            <span>🔤</span>
+            <strong>Sound Cards</strong>
+            <small>Phonics sounds, blends, and examples</small>
+          </button>
+          <button class="feature-card" type="button" data-tab="quest">
+            <span>🎯</span>
+            <strong>Word Quest</strong>
+            <small>Quick sound matching game</small>
+          </button>
+          <button class="feature-card" type="button" data-tab="sight">
+            <span>👀</span>
+            <strong>Sight Words</strong>
+            <small>High-frequency sight word shelf</small>
+          </button>
+          <button class="feature-card" type="button" data-tab="vocab">
+            <span>🖼️</span>
+            <strong>1000 Words</strong>
+            <small>Auto-play picture album</small>
+          </button>
+          <button class="feature-card" type="button" data-tab="dictation">
+            <span>✍️</span>
+            <strong>Dictation</strong>
+            <small>Listen, look, spell, and score</small>
+          </button>
+          <button class="feature-card" type="button" data-tab="wrongbook">
+            <span>📒</span>
+            <strong>Wrong Book</strong>
+            <small>Review missed words on schedule</small>
+          </button>
+          <button class="feature-card" type="button" data-tab="story">
+            <span>🎭</span>
+            <strong>Story Theatre</strong>
+            <small>100 funny auto-read phonics stories</small>
+          </button>
+          <button class="feature-card" type="button" data-tab="grownup">
+            <span>🧭</span>
+            <strong>Grown-up View</strong>
+            <small>Coverage and learning design notes</small>
+          </button>
+        </div>
+      </section>
+
+      <section id="learn-panel" class="panel">
         <div class="section-title">
           <div>
             <h2>Sound Cards</h2>
